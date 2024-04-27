@@ -13,7 +13,7 @@ namespace BackendApi.Controllers
     [ApiController]
     public class JobController : ControllerBase
     {
-        private IMapper _mapper;
+        private IMapper _mapper { get; }
         private ApplicationDbContext _context { get; }
 
         public JobController(ApplicationDbContext context, IMapper mapper)
@@ -26,10 +26,10 @@ namespace BackendApi.Controllers
         #region Create 
         [HttpPost]
         [Route("Create")]
-        public async Task<IActionResult> CreateCompany([FromBody] CompanyCreateDto dto)
+        public async Task<IActionResult> CreateJob([FromBody]  JobCreateDto dto)
         {
-            Company newCompany = _mapper.Map<Company>(dto);
-            await _context.Companies.AddAsync(newCompany);
+            var newJob = _mapper.Map<Job>(dto);
+            await _context.Jobs.AddAsync(newJob);
             await _context.SaveChangesAsync();
 
             return Ok("Job created Successfully");
@@ -38,10 +38,10 @@ namespace BackendApi.Controllers
         //Read
         [HttpGet]
         [Route("Get")]
-        public a Task<IActionResult<IEnumerable<JobGetDto>>> GetJobs()
+        public async Task<ActionResult<IEnumerable<JobGetDto>>> GetJobs()
         {
-            var jobs = _context.Jobs.ToListAsync();
-            var convertedJobs = _mapper.Map<JobGetDto>(jobs);
+            var jobs = await _context.Jobs.Include(job => job.Company).ToListAsync();
+            var convertedJobs = _mapper.Map<IEnumerable<JobGetDto>>(jobs);
             return Ok(convertedJobs);
         }
 

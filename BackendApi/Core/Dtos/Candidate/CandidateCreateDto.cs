@@ -1,18 +1,12 @@
-﻿namespace BackendApi.Core.Entities
+﻿namespace BackendApi.Core.Dtos.Candidate
 {
-    public class Candidate : BaseEntity
+    public class CandidateCreateDto
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
         public string? ConverLetter { get; set; }
-        public string? ResumeUrl { get; set; }
-
-
-        // Relations
-
         public long JobId { get; set; }
-        public Job? Job { get; set; }
     }
 }
